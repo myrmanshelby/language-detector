@@ -107,5 +107,11 @@ def get_books_text():
             file.write(books_text[0])
     return
 
+def split_and_pad(text):
+    words = regex.findall(r"\b\p{L}+\'*\p{L}*\b", text, flags=regex.UNICODE)
+    words = [word.lower() + '\n' for word in words]
+    return words
+
 if __name__=="__main__":
-    get_books_text()
+    # get_books_text()
+    print(split_and_pad("I'm going to the mall today w/ all mi friendsss... Woohoo!!"))

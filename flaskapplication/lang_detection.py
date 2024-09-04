@@ -116,6 +116,25 @@ def clean(text):
     remove_vals = r"[, !\"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~\\0-9]"
     return regex.sub(remove_vals, "", text)
 
+def get_lang_text(text):
+    beginning = "*** START OF THE PROJECT GUTENBERG EBOOK"
+    end1 = "*** END OF THE PROJECT GUTENBERG EBOOK"
+    end2 = "End of Project Gutenbergs"
+
+    target = regex.compile(f'{regex.escape(beginning)}(.*?){regex.escape(end1)}|{regex.escape(end2)}', regex.DOTALL)
+    match = target.search(text)
+
+    if match:
+        start_index = match.start() + len(beginning)
+        end_index = match.end() - 40
+        text = text[start_index:end_index]
+        index = text.find("***")
+        if index != -1:
+            text = text[index + 600 + len("***"):].strip()
+    return clean(text)
+
+
+
 if __name__=="__main__":
     # get_books_text()
     print(clean("I'm going to the mall today w/ all mi friendsss... Woohoo!!"))

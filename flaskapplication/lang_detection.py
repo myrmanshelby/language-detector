@@ -142,7 +142,45 @@ def get_lang_text(text):
             text = text[index + 600 + len("***"):].strip()
     return clean(text)
 
+def generate_ngrams(line):
+    ngrams = []
+    n = len(line)
+    for i in range(n):
+        for j in range(1, min(n - i, 6)):
+            ngrams.append(line[i:i+j])
+    return ngrams
 
+def count_ngram_frequency(ngrams):
+    return collections.Counter(ngrams)
+
+def sort_ngrams_by_frequency(ngram_counter):
+    return sorted(ngram_counter.items(), key=lambda x: (-x[1], x[0]))
+
+def generate_and_count_ngrams(input_file_path, output_file_path, frequency_file_path):
+    n_gram_counts = collections.Counter()
+
+    with open(input_file_path, 'r', encoding='UTF-8') as input_file:
+        for line in input_file:
+            line = line.strip()
+            ngrams = generate_ngrams(line)
+            n_gram_counts += count_ngram_frequency(ngrams)
+
+    sorted_ngrams = sort_ngrams_by_frequency(n_gram_counts)
+
+    with open(output_file_path, 'w', encoding='UTF-8') as output_file, \
+        open(frequency_file_path, 'w', encoding='UTF-8') as frequency_file:
+
+        for n_gram, count in sorted_ngrams:
+            output_file.write(f"{n_gram}\n")
+            frequency_file.write(f"{n_gram}: {count}\n")
 
 if __name__=="__main__":
-    get_books_text()
+#    get_books_text()
+    language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
+    for item in language_codes:
+        language = (pycountry.languages.get(alpha_3=item)).name
+        input_file_path = f"flaskapplication/dataset/tokenized/{language}.int1.txt"
+        n_gram_file_path = f"flaskapplication/dataset/ngrams/{language}.nGrams.txt"
+        frequency_file_path = f"flaskapplication/dataset/processed/{language}.nGramsFrequency.txt"
+        print("Processing ", language, " for nGrams!")
+        generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path) 

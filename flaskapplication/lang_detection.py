@@ -100,11 +100,20 @@ def get_books_text():
                 response.raise_for_status()
                 raw_text = response.content.decode('utf-8', errors='ignore').strip()
                 books_text.append(raw_text)
+
+                cleaned_text = get_lang_text(raw_text)
+                tokens.append((split_and_pad(cleaned_text)))
+
             except requests.exceptions.RequestException as e:
                 print(f"Error downloading book from {url}: {e}")
         filename = os.path.join("flaskapplication/dataset", f"{language}.txt")
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(books_text[0])
+
+        filename_int1 = os.path.join("flaskapplication/dataset", "tokenized", f"{language}.int1.txt")
+        with open(filename_int1, 'w', encoding='utf-8') as file:
+            for item in tokens[0]:
+                file.write(item)
     return
 
 def split_and_pad(text):
@@ -136,5 +145,4 @@ def get_lang_text(text):
 
 
 if __name__=="__main__":
-    # get_books_text()
-    print(clean("I'm going to the mall today w/ all mi friendsss... Woohoo!!"))
+    get_books_text()

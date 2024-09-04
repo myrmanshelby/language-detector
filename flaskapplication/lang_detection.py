@@ -112,6 +112,10 @@ def split_and_pad(text):
     words = [word.lower() + '\n' for word in words]
     return words
 
+def clean(text):
+    remove_vals = r"[, !\"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~\\0-9]"
+    return regex.sub(remove_vals, "", text)
+
 if __name__=="__main__":
     # get_books_text()
-    print(split_and_pad("I'm going to the mall today w/ all mi friendsss... Woohoo!!"))
+    print(clean("I'm going to the mall today w/ all mi friendsss... Woohoo!!"))

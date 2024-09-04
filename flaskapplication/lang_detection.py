@@ -174,13 +174,47 @@ def generate_and_count_ngrams(input_file_path, output_file_path, frequency_file_
             output_file.write(f"{n_gram}\n")
             frequency_file.write(f"{n_gram}: {count}\n")
 
+def preprocess_file(file_name):
+    tokenized_lines = []
+    with open(file_name, 'r', encoding='UTF-8') as file:
+        for line in file:
+            line = line.strip().replace(' ', '_ _')
+            tokenized_lines.append(f'_{line}_\n')
+    return tokenized_lines
+
+def test_language(file_name):
+    directory = "flaskapplication/dataset/nGrams/"
+    trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.nGrams.txt')]
+    print(trained_languages)
+    tokenized_lines = preprocess_file(file_name)
+    n_gram_counts = collections.Counter()
+    for line in tokenized_lines:
+        ngrams = generate_ngrams(line)
+        n_gram_counts += count_ngram_frequency(ngrams)
+
+    sorted_ngrams = sort_ngrams_by_frequency(n_gram_counts)
+    out_of_order = []
+    for language_file in trained_languages:
+        with open(language_file, 'r', encoding='UTF-8') as file:
+            train_ngrams = [line.strip() for line in file]
+        rank_table = {ngram: rank for rank, ngram in enumerate(train_ngrams, start=1)}
+        out_of_order.append(sum(abs(rank_table.get(ngram, 50000) - rank) for rank, (ngram, _) in enumerate(sorted_ngrams, start=1)))
+
+    min_index = out_of_order.index(min(out_of_order))
+    identified_language = trained_languages[min_index]
+    result = os.path.basename(identified_language)[:-10]
+    return result
+
 if __name__=="__main__":
-#    get_books_text()
-    language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
+#   get_books_text()
+    '''language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
     for item in language_codes:
         language = (pycountry.languages.get(alpha_3=item)).name
         input_file_path = f"flaskapplication/dataset/tokenized/{language}.int1.txt"
         n_gram_file_path = f"flaskapplication/dataset/ngrams/{language}.nGrams.txt"
         frequency_file_path = f"flaskapplication/dataset/processed/{language}.nGramsFrequency.txt"
         print("Processing ", language, " for nGrams!")
-        generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path) 
+        generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path)'''
+    file_name = "testeng.txt"
+    lang_result = test_language(file_name)
+    print(f"Identified Language = {lang_result}")

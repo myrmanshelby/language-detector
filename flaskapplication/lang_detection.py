@@ -122,7 +122,7 @@ def split_and_pad(text):
     return words
 
 def clean(text):
-    remove_vals = r"[, !\"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~\\0-9]"
+    remove_vals = r"[,!\"#\$%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~\\0-9]"
     return regex.sub(remove_vals, "", text)
 
 def get_lang_text(text):

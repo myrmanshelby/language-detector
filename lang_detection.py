@@ -106,11 +106,11 @@ def get_books_text():
 
             except requests.exceptions.RequestException as e:
                 print(f"Error downloading book from {url}: {e}")
-        filename = os.path.join("flaskapplication/dataset", f"{language}.txt")
+        filename = os.path.join("dataset", f"{language}.txt")
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(books_text[0])
 
-        filename_int1 = os.path.join("flaskapplication/dataset", "tokenized", f"{language}.int1.txt")
+        filename_int1 = os.path.join("dataset", "tokenized", f"{language}.int1.txt")
         with open(filename_int1, 'w', encoding='utf-8') as file:
             for item in tokens[0]:
                 file.write(item)
@@ -192,7 +192,7 @@ def preprocess_text(paragraph):
 
 def test_language(text):
     directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset/ngrams/")
-    trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.ngrams.txt')]
+    trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('nGrams.txt')]
     tokenized_lines = preprocess_text(text)
     n_gram_counts = collections.Counter()
     for line in tokenized_lines:
@@ -218,11 +218,11 @@ if __name__=="__main__":
     language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
     for item in language_codes:
         language = (pycountry.languages.get(alpha_3=item)).name
-        input_file_path = f"flaskapplication/dataset/tokenized/{language}.int1.txt"
-        n_gram_file_path = f"flaskapplication/dataset/ngrams/{language}.nGrams.txt"
-        frequency_file_path = f"flaskapplication/dataset/processed/{language}.nGramsFrequency.txt"
+        input_file_path = f"dataset/tokenized/{language}.int1.txt"
+        n_gram_file_path = f"dataset/ngrams/{language}.nGrams.txt"
+        frequency_file_path = f"dataset/processed/{language}.nGramsFrequency.txt"
         print("Processing ", language, " for nGrams!")
         generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path)
-    file_name = "flaskapplication/test.txt"'''
+    file_name = "test.txt"'''
     lang_result = test_language("Hello my name is Shelby, What's your name?")
     print(f"Identified Language = {lang_result}")

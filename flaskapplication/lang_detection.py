@@ -192,7 +192,7 @@ def preprocess_text(paragraph):
 
 def test_language(text):
     directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset/ngrams/")
-    trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.nGrams.txt')]
+    trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.ngrams.txt')]
     tokenized_lines = preprocess_text(text)
     n_gram_counts = collections.Counter()
     for line in tokenized_lines:

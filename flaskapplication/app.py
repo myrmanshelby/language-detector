@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from lang_detection import test_language
-import os
-
-print(os.getcwd())
+from waitress import serve
 
 app = Flask(__name__)
 
@@ -18,4 +16,4 @@ def detect_language():
     return render_template('result.html', language=language)
 
 if __name__ == "__main__":
-    app.run()
+    serve(app, host="0.0.0.0", port=8000)

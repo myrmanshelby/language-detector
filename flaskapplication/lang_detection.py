@@ -182,11 +182,18 @@ def preprocess_file(file_name):
             tokenized_lines.append(f'_{line}_\n')
     return tokenized_lines
 
-def test_language(file_name):
-    directory = "flaskapplication/dataset/nGrams/"
+def preprocess_text(paragraph):
+    tokenized_lines = []
+    lines = paragraph.splitlines()
+    for line in lines:
+        line = line.strip().replace(' ', '_ _')
+        tokenized_lines.append(f'_{line}_\n')
+    return tokenized_lines
+
+def test_language(text):
+    directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dataset/nGrams/")
     trained_languages = [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.nGrams.txt')]
-    print(trained_languages)
-    tokenized_lines = preprocess_file(file_name)
+    tokenized_lines = preprocess_text(text)
     n_gram_counts = collections.Counter()
     for line in tokenized_lines:
         ngrams = generate_ngrams(line)
@@ -206,15 +213,16 @@ def test_language(file_name):
     return result
 
 if __name__=="__main__":
-#   get_books_text()
-    '''language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
+    '''
+    get_books_text()
+    language_codes = ['fra', 'deu', 'eng', 'spa', 'zho', 'jpn']
     for item in language_codes:
         language = (pycountry.languages.get(alpha_3=item)).name
         input_file_path = f"flaskapplication/dataset/tokenized/{language}.int1.txt"
         n_gram_file_path = f"flaskapplication/dataset/ngrams/{language}.nGrams.txt"
         frequency_file_path = f"flaskapplication/dataset/processed/{language}.nGramsFrequency.txt"
         print("Processing ", language, " for nGrams!")
-        generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path)'''
-    file_name = "testeng.txt"
-    lang_result = test_language(file_name)
+        generate_and_count_ngrams(input_file_path, n_gram_file_path, frequency_file_path)
+    file_name = "flaskapplication/test.txt"'''
+    lang_result = test_language("Hello my name is Shelby, What's your name?")
     print(f"Identified Language = {lang_result}")
